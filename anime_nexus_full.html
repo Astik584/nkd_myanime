@@ -1,0 +1,360 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#080000;--bg2:#110000;--bg3:#1a0000;--red:#cc0000;--red2:#ee1111;--red3:#ff5555;--border:#2a0000;--border2:#550000;--text:#f0e0e0;--text2:#c09090;--text3:#7a4444;--card:#0e0000;--tag:#1e0000;--score:#ff2020}
+.light-mode{--bg:#fff5f5;--bg2:#ffe8e8;--bg3:#ffd5d5;--red:#bb0000;--red2:#cc0000;--red3:#990000;--border:#f0c0c0;--border2:#e08080;--text:#150000;--text2:#551010;--text3:#aa4444;--card:#ffffff;--tag:#ffe8e8;--score:#bb0000}
+body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:15px;line-height:1.6;transition:background .3s,color .3s;min-height:100vh}
+.wrap{max-width:1100px;margin:0 auto;padding:0 1rem 4rem}
+nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 0;border-bottom:2px solid var(--red);margin-bottom:1.5rem;position:sticky;top:0;background:var(--bg);z-index:200}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;color:var(--red2);letter-spacing:.1em}
+.logo sup{font-size:.7rem;color:var(--text3);font-family:'Rajdhani',sans-serif;letter-spacing:.2em;margin-left:6px}
+.nav-right{display:flex;align-items:center;gap:10px}
+.theme-btn{cursor:pointer;background:var(--tag);border:1px solid var(--border2);border-radius:6px;padding:5px 14px;color:var(--text2);font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:500;letter-spacing:.05em;transition:all .2s}
+.theme-btn:hover{border-color:var(--red2);color:var(--red3)}
+.count-badge{background:var(--red);color:#fff;border-radius:5px;padding:3px 10px;font-size:12px;font-family:'Rajdhani',sans-serif;font-weight:600}
+.stats-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:1.5rem}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--score);line-height:1}
+.stat-lbl{font-size:11px;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+.controls{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.2rem;align-items:center}
+.genre-btn{background:var(--tag);border:1px solid var(--border);border-radius:5px;padding:5px 12px;color:var(--text2);font-size:13px;font-family:'Rajdhani',sans-serif;cursor:pointer;transition:all .2s;white-space:nowrap}
+.genre-btn:hover,.genre-btn.active{background:var(--red);border-color:var(--red2);color:#fff}
+.sort-select{background:var(--card);border:1px solid var(--border2);border-radius:5px;padding:5px 10px;color:var(--text);font-size:13px;font-family:'Rajdhani',sans-serif;cursor:pointer;outline:none}
+.search-box{background:var(--card);border:1px solid var(--border2);border-radius:6px;padding:7px 14px;color:var(--text);font-size:14px;font-family:'Rajdhani',sans-serif;width:220px;outline:none;transition:border-color .2s;margin-left:auto}
+.search-box:focus{border-color:var(--red)}
+.search-box::placeholder{color:var(--text3)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:14px}
+.anime-card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;transition:border-color .25s,transform .2s}
+.anime-card:hover{border-color:var(--red2);transform:translateY(-4px)}
+.card-img{width:100%;height:240px;object-fit:cover;display:block;background:var(--bg3)}
+.card-img-placeholder{width:100%;height:240px;background:var(--bg3);display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:12px}
+.card-info{padding:10px 12px}
+.card-title{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;color:var(--text);line-height:1.2;margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-meta-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.card-year{font-size:11px;color:var(--text3)}
+.card-score{font-size:13px;font-weight:600;color:var(--score);background:var(--tag);border:1px solid var(--border2);border-radius:4px;padding:1px 6px}
+.card-genres{display:flex;flex-wrap:wrap;gap:3px}
+.gtag{background:var(--tag);border:1px solid var(--border);border-radius:3px;font-size:10px;padding:1px 5px;color:var(--text3)}
+.load-more{display:block;margin:2rem auto 0;background:var(--red);border:none;border-radius:8px;padding:10px 32px;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.1em;cursor:pointer;transition:background .2s}
+.load-more:hover{background:var(--red2)}
+.load-more:disabled{background:var(--border2);cursor:not-allowed}
+.loading-msg{text-align:center;padding:3rem;color:var(--text3);font-size:1.1rem}
+.loading-bar{width:200px;height:3px;background:var(--border2);border-radius:2px;margin:1rem auto;overflow:hidden}
+.loading-bar-inner{height:100%;background:var(--red);border-radius:2px;animation:loadpulse 1s ease-in-out infinite}
+@keyframes loadpulse{0%{width:10%}50%{width:80%}100%{width:10%}}
+
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;overflow-y:auto;padding:2rem 1rem}
+.modal-bg.open{display:block}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;max-width:900px;margin:0 auto;overflow:hidden}
+.modal-top{display:grid;grid-template-columns:220px 1fr;gap:0}
+.modal-poster{width:100%;object-fit:cover;display:block;max-height:320px}
+.modal-poster-ph{width:100%;height:320px;background:var(--bg3);display:flex;align-items:center;justify-content:center;color:var(--text3)}
+.modal-info{padding:1.5rem}
+.modal-close{float:right;cursor:pointer;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.1em;color:var(--text3);background:var(--tag);border:1px solid var(--border2);border-radius:5px;padding:3px 12px;transition:all .2s}
+.modal-close:hover{color:var(--red2);border-color:var(--red)}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;color:var(--text);line-height:1.1;margin:0.5rem 0 0.3rem}
+.modal-jp{font-size:13px;color:var(--text3);margin-bottom:.75rem}
+.modal-score-row{display:flex;align-items:center;gap:10px;margin-bottom:.75rem}
+.modal-score{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--score)}
+.modal-rank{font-size:13px;color:var(--text3)}
+.modal-desc{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:1rem;max-height:100px;overflow-y:auto}
+.modal-meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:1rem}
+.meta-item label{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);display:block}
+.meta-item span{font-size:13px;color:var(--text)}
+.modal-genres{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1rem}
+.modal-genre-tag{background:var(--red);color:#fff;border-radius:4px;font-size:11px;padding:2px 8px;font-weight:500}
+.chars-section{padding:1.2rem 1.5rem;border-top:1px solid var(--border)}
+.chars-title{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--red2);letter-spacing:.08em;margin-bottom:1rem}
+.chars-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+.char-card{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;text-align:center}
+.char-img{width:100%;height:140px;object-fit:cover;object-position:top;display:block;background:var(--bg3)}
+.char-img-ph{width:100%;height:140px;background:var(--bg3);display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:11px}
+.char-name{font-size:12px;font-weight:600;color:var(--text);padding:6px 6px 2px;line-height:1.2}
+.char-role{font-size:10px;color:var(--text3);padding:0 6px 6px}
+.chars-loading{color:var(--text3);font-size:13px;padding:1rem;text-align:center}
+.no-results{text-align:center;padding:3rem;color:var(--text3);font-size:1.1rem}
+.trailer-btn{background:var(--tag);border:1px solid var(--border2);border-radius:5px;padding:5px 14px;color:var(--red3);font-size:13px;font-family:'Rajdhani',sans-serif;cursor:pointer;text-decoration:none;display:inline-block;transition:all .2s;margin-top:.5rem}
+.trailer-btn:hover{border-color:var(--red);color:var(--red2)}
+@media(max-width:600px){
+  .modal-top{grid-template-columns:1fr}
+  .modal-poster,.modal-poster-ph{max-height:200px;height:200px}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .search-box{width:100%;margin-left:0}
+  .controls{gap:6px}
+  .chars-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr))}
+}
+</style>
+
+<div class="wrap">
+  <nav>
+    <div class="logo">Anime<sup>NEXUS</sup></div>
+    <div class="nav-right">
+      <span class="count-badge" id="countBadge">Loading...</span>
+      <button class="theme-btn" id="themeBtn">Light Mode</button>
+    </div>
+  </nav>
+
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card"><div class="stat-num" id="s1">—</div><div class="stat-lbl">Anime Loaded</div></div>
+    <div class="stat-card"><div class="stat-num" id="s2">—</div><div class="stat-lbl">Avg Score</div></div>
+    <div class="stat-card"><div class="stat-num" id="s3">—</div><div class="stat-lbl">Airing Now</div></div>
+    <div class="stat-card"><div class="stat-num" id="s4">—</div><div class="stat-lbl">Studios</div></div>
+  </div>
+
+  <div class="controls" id="genreControls">
+    <button class="genre-btn active" data-g="all">All</button>
+    <button class="genre-btn" data-g="Action">Action</button>
+    <button class="genre-btn" data-g="Romance">Romance</button>
+    <button class="genre-btn" data-g="Comedy">Comedy</button>
+    <button class="genre-btn" data-g="Fantasy">Fantasy</button>
+    <button class="genre-btn" data-g="Sci-Fi">Sci-Fi</button>
+    <button class="genre-btn" data-g="Horror">Horror</button>
+    <button class="genre-btn" data-g="Mystery">Mystery</button>
+    <button class="genre-btn" data-g="Sports">Sports</button>
+    <button class="genre-btn" data-g="Slice of Life">Slice of Life</button>
+    <select class="sort-select" id="sortSelect">
+      <option value="score">Sort: Score</option>
+      <option value="title">Sort: Title</option>
+      <option value="year">Sort: Year</option>
+      <option value="eps">Sort: Episodes</option>
+    </select>
+    <input class="search-box" type="text" id="searchBox" placeholder="Search anime...">
+  </div>
+
+  <div id="gridContainer">
+    <div class="loading-msg">
+      <div>Fetching anime from MyAnimeList...</div>
+      <div class="loading-bar"><div class="loading-bar-inner"></div></div>
+      <div id="loadProgress" style="font-size:12px;color:var(--text3);margin-top:.5rem">Page 1 of 50...</div>
+    </div>
+  </div>
+
+  <button class="load-more" id="loadMoreBtn" style="display:none" onclick="renderMore()">Load More Anime</button>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal" id="modalBox">
+    <div class="modal-top">
+      <div id="modalPosterWrap"></div>
+      <div class="modal-info">
+        <button class="modal-close" onclick="closeModal()">CLOSE X</button>
+        <div class="modal-title" id="mTitle"></div>
+        <div class="modal-jp" id="mJp"></div>
+        <div class="modal-score-row">
+          <div class="modal-score" id="mScore"></div>
+          <div class="modal-rank" id="mRank"></div>
+        </div>
+        <div class="modal-desc" id="mDesc"></div>
+        <div class="modal-genres" id="mGenres"></div>
+        <div class="modal-meta-grid" id="mMeta"></div>
+        <div id="mTrailer"></div>
+      </div>
+    </div>
+    <div class="chars-section">
+      <div class="chars-title">Characters</div>
+      <div class="chars-grid" id="charsGrid"><div class="chars-loading">Loading characters...</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const BASE = "https://api.jikan.moe/v4";
+let allAnime = [];
+let displayList = [];
+let rendered = 0;
+const PAGE_SIZE = 48;
+let activeGenre = "all";
+let sortBy = "score";
+let searchQ = "";
+let isDark = true;
+let fetchedPages = 0;
+const TARGET_PAGES = 50;
+
+async function delay(ms){return new Promise(r=>setTimeout(r,ms))}
+
+async function fetchPage(page){
+  try{
+    const res = await fetch(`${BASE}/anime?page=${page}&limit=25&order_by=score&sort=desc&sfw=true`);
+    if(!res.ok) return [];
+    const d = await res.json();
+    return d.data||[];
+  }catch{return[]}
+}
+
+function mapAnime(a){
+  return {
+    id:a.mal_id,
+    title:a.title||"Unknown",
+    jp:a.title_japanese||"",
+    img:a.images?.jpg?.large_image_url||a.images?.jpg?.image_url||"",
+    score:a.score||0,
+    year:a.year||a.aired?.prop?.from?.year||null,
+    eps:a.episodes||"?",
+    status:a.status||"",
+    genres:(a.genres||[]).map(g=>g.name),
+    studios:(a.studios||[]).map(s=>s.name).join(", ")||"Unknown",
+    synopsis:a.synopsis||"No synopsis available.",
+    rank:a.rank||"N/A",
+    trailer:a.trailer?.url||null,
+    source:a.source||"",
+    rating:a.rating||""
+  }
+}
+
+function getFiltered(){
+  let list = [...allAnime];
+  if(activeGenre!=="all") list=list.filter(a=>a.genres.some(g=>g.toLowerCase()===activeGenre.toLowerCase()));
+  if(searchQ) list=list.filter(a=>a.title.toLowerCase().includes(searchQ)||a.jp.toLowerCase().includes(searchQ)||a.genres.join(" ").toLowerCase().includes(searchQ));
+  list.sort((a,b)=>{
+    if(sortBy==="score") return b.score-a.score;
+    if(sortBy==="title") return a.title.localeCompare(b.title);
+    if(sortBy==="year") return (b.year||0)-(a.year||0);
+    if(sortBy==="eps") return (parseInt(b.eps)||0)-(parseInt(a.eps)||0);
+    return 0;
+  });
+  return list;
+}
+
+function renderGrid(reset=false){
+  if(reset) rendered=0;
+  displayList = getFiltered();
+  const container = document.getElementById("gridContainer");
+  if(rendered===0){
+    if(!displayList.length){container.innerHTML='<div class="no-results">No anime found. Try a different filter.</div>';document.getElementById("loadMoreBtn").style.display="none";return;}
+    container.innerHTML='<div class="grid" id="animeGrid"></div>';
+  }
+  const grid = document.getElementById("animeGrid");
+  if(!grid) return;
+  const slice = displayList.slice(rendered, rendered+PAGE_SIZE);
+  slice.forEach(a=>{
+    const card = document.createElement("div");
+    card.className="anime-card";
+    card.onclick=()=>openModal(a.id);
+    card.innerHTML=`
+      ${a.img?`<img class="card-img" src="${a.img}" alt="${a.title}" loading="lazy" onerror="this.parentNode.innerHTML='<div class=card-img-placeholder>No Image</div>'">`:`<div class="card-img-placeholder">No Image</div>`}
+      <div class="card-info">
+        <div class="card-title">${a.title}</div>
+        <div class="card-meta-row">
+          <span class="card-year">${a.year||"?"}</span>
+          <span class="card-score">${a.score?a.score.toFixed(1):"N/A"}</span>
+        </div>
+        <div class="card-genres">${a.genres.slice(0,3).map(g=>`<span class="gtag">${g}</span>`).join("")}</div>
+      </div>`;
+    grid.appendChild(card);
+  });
+  rendered+=slice.length;
+  document.getElementById("loadMoreBtn").style.display=rendered<displayList.length?"block":"none";
+  updateStats();
+}
+
+function renderMore(){renderGrid(false)}
+
+function updateStats(){
+  const list = allAnime;
+  document.getElementById("s1").textContent=list.length;
+  document.getElementById("countBadge").textContent=list.length+" anime";
+  const scored = list.filter(a=>a.score>0);
+  document.getElementById("s2").textContent=scored.length?(scored.reduce((s,a)=>s+a.score,0)/scored.length).toFixed(2):"—";
+  document.getElementById("s3").textContent=list.filter(a=>a.status&&a.status.toLowerCase().includes("airing")).length;
+  const studios=new Set(list.flatMap(a=>a.studios?a.studios.split(", ").filter(Boolean):[]));
+  document.getElementById("s4").textContent=studios.size;
+}
+
+async function loadAll(){
+  document.getElementById("loadMoreBtn").style.display="none";
+  for(let page=1;page<=TARGET_PAGES;page++){
+    const data = await fetchPage(page);
+    if(!data.length) break;
+    const mapped = data.map(mapAnime).filter(a=>a.score>0);
+    allAnime.push(...mapped);
+    allAnime = [...new Map(allAnime.map(a=>[a.id,a])).values()];
+    document.getElementById("loadProgress").textContent=`Loaded ${allAnime.length} anime (page ${page}/${TARGET_PAGES})...`;
+    if(page===1){
+      document.getElementById("gridContainer").innerHTML='<div class="grid" id="animeGrid"></div>';
+      rendered=0;
+      renderGrid(false);
+    } else {
+      updateStats();
+    }
+    await delay(350);
+  }
+  document.getElementById("loadProgress") && (document.getElementById("loadProgress").textContent="");
+  renderGrid(true);
+}
+
+async function openModal(id){
+  const a = allAnime.find(x=>x.id===id);
+  if(!a) return;
+  document.getElementById("modalBg").classList.add("open");
+  document.body.style.overflow="hidden";
+  document.getElementById("mTitle").textContent=a.title;
+  document.getElementById("mJp").textContent=a.jp||"";
+  document.getElementById("mScore").textContent=a.score?a.score.toFixed(1)+" / 10":"N/A";
+  document.getElementById("mRank").textContent=a.rank?"Rank #"+a.rank:"";
+  document.getElementById("mDesc").textContent=a.synopsis;
+  document.getElementById("mGenres").innerHTML=a.genres.map(g=>`<span class="modal-genre-tag">${g}</span>`).join("");
+  document.getElementById("mMeta").innerHTML=`
+    <div class="meta-item"><label>Studio</label><span>${a.studios||"Unknown"}</span></div>
+    <div class="meta-item"><label>Episodes</label><span>${a.eps}</span></div>
+    <div class="meta-item"><label>Year</label><span>${a.year||"Unknown"}</span></div>
+    <div class="meta-item"><label>Status</label><span>${a.status||"Unknown"}</span></div>
+    <div class="meta-item"><label>Source</label><span>${a.source||"Unknown"}</span></div>
+    <div class="meta-item"><label>Rating</label><span>${a.rating||"Unknown"}</span></div>`;
+  document.getElementById("mPosterWrap")||null;
+  document.getElementById("modalPosterWrap").innerHTML=a.img
+    ?`<img class="modal-poster" src="${a.img}" alt="${a.title}" onerror="this.outerHTML='<div class=modal-poster-ph>No Image</div>'">`
+    :`<div class="modal-poster-ph">No Image</div>`;
+  document.getElementById("mTrailer").innerHTML=a.trailer
+    ?`<a class="trailer-btn" href="${a.trailer}" target="_blank">Watch Trailer</a>`:"";
+  document.getElementById("charsGrid").innerHTML='<div class="chars-loading">Loading characters...</div>';
+  fetchChars(id);
+}
+
+async function fetchChars(id){
+  try{
+    await delay(300);
+    const res = await fetch(`${BASE}/anime/${id}/characters`);
+    const d = await res.json();
+    const chars = (d.data||[]).slice(0,24);
+    if(!chars.length){document.getElementById("charsGrid").innerHTML='<div class="chars-loading">No character data available.</div>';return;}
+    document.getElementById("charsGrid").innerHTML=chars.map(c=>{
+      const ch=c.character;
+      const img=ch.images?.jpg?.image_url||"";
+      return `<div class="char-card">
+        ${img?`<img class="char-img" src="${img}" alt="${ch.name}" loading="lazy" onerror="this.outerHTML='<div class=char-img-ph>No Photo</div>'">`:`<div class="char-img-ph">No Photo</div>`}
+        <div class="char-name">${ch.name}</div>
+        <div class="char-role">${c.role||""}</div>
+      </div>`;
+    }).join("");
+  }catch{document.getElementById("charsGrid").innerHTML='<div class="chars-loading">Could not load characters.</div>';}
+}
+
+function closeModal(){
+  document.getElementById("modalBg").classList.remove("open");
+  document.body.style.overflow="";
+}
+document.getElementById("modalBg").addEventListener("click",function(e){if(e.target===this)closeModal()});
+
+document.getElementById("themeBtn").addEventListener("click",()=>{
+  isDark=!isDark;
+  document.body.classList.toggle("light-mode",!isDark);
+  document.getElementById("themeBtn").textContent=isDark?"Light Mode":"Dark Mode";
+});
+
+document.querySelectorAll(".genre-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".genre-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    activeGenre=btn.dataset.g;
+    renderGrid(true);
+  });
+});
+
+document.getElementById("sortSelect").addEventListener("change",e=>{sortBy=e.target.value;renderGrid(true)});
+document.getElementById("searchBox").addEventListener("input",e=>{searchQ=e.target.value.trim().toLowerCase();renderGrid(true)});
+
+loadAll();
+</script>
